@@ -1,0 +1,24 @@
+.candidateList {
+    position: absolute;
+    display: inline-block;
+}
+.candidateListItems {
+    position: relative;
+    z-index: 99;
+    background-color: red;
+}
+.contributorList {
+    position: absolute;
+    display: inline-block;
+}
+.contributorListItems {
+    position: relative;
+    z-index: 99;
+    background-color: red;
+}
+label[for='contributor_hidden'] {
+    display: none;
+}
+label[for='candidate_hidden'] {
+    display: none;
+}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <h3>New Record, please select type.</h3>
+    </div>
+    <br>
+    {% for record in record_types %}
+        <div class="row">
+            <a class="btn btn-primary" href="{{ url_for('texas.new') }}?type={{ record }}" role="button">{{ record }}</a>
+        </div>
+        <br>
+    {% endfor %}
+{% endblock %}

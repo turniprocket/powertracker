@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    {% if current_user.is_authenticated %}
+        <div class="row">
+            <a class="btn btn-primary" href="{{ url_for('texas.new') }}">Add new record</a>
+        </div>
+    {% endif %}
+    <br>
+    <div class="row">
+        <h1>Texas Campaign Finance Home</h1>
+    </div>
+    <br>
+    <!--Place holder for search box-->
+    <div class="row">
+        {% if g.search_form %}
+            <form class="navbar-form" method="GET" action="{{ url_for('texas.search') }}">
+                <div class="form-group">
+                    {{ wtf.quick_form(g.search_form) }}
+                </div>
+            </form>
+        {% endif %}
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <h3>Latest Contributions</h3>
+                <div class="row bg-secondary text-white">
+                    <div class="col border">
+                        <p>Contribution Date</p>
+                    </div>
+                    <div class="col border">
+                        <p>Amount</p>
+                    </div>
+                    <div class="col border">
+                        <p>Contributor</p>
+                    </div>
+                    <div class="col border">
+                        <p>Candidate</p>
+                    </div>
+                    <div class="col border">
+                        <p>Election Cycle</p>
+                    </div>
+                </div>
+            {% for contribution in latest_contributions %}
+                <div class="row">
+                    <div class="col border">
+                        {{ contribution.contribution_date }}
+                    </div>
+                    <div class="col border">
+                        {{ contribution.amount }}
+                    </div>
+                    <div class="col border">
+                        {{ contribution.get_contributor().first_name }} {{ contribution.get_contributor().last_name }}
+                    </div>
+                    <div class="col border">
+                        {{ contribution.get_candidate().first_name }} {{ contribution.get_candidate().last_name }}
+                    </div>
+                    <div class="col border">
+                        {{ contribution.election_cycle }}
+                    </div>
+                </div>
+            {% endfor %}
+            <nav aria-label="...">
+                <ul class="pager">
+                    <li class="previous{% if not prev_url %} disabled{% endif %}">
+                        <a href="{{ prev_url or '#' }}">
+                            <span aria-hidden="true">&larr;</span> Newer Contributions
+                        </a>
+                    </li>
+                    <li class="next{% if not next_url %} disabled{% endif %}">
+                        <a href="{{ next_url or '#' }}">
+                            Older Contributions <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}

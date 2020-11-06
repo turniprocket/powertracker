@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <h1>All Candidates</h1>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <h3>Latest Candidates</h3>
+                <div class="row bg-secondary text-white">
+                    <div class="col border">
+                        <p>Registration Date</p>
+                    </div>
+                    <div class="col border">
+                        <p>Last Name</p>
+                    </div>
+                    <div class="col border">
+                        <p>Zip Code</p>
+                    </div>
+                    <div class="col border">
+                        <p>Public ID</p>
+                    </div>
+                </div>
+            {% for candidate in candidates_list %}
+                <div class="row">
+                    <div class="col border">
+                        {{ candidate.registration_date }}
+                    </div>
+                    <div class="col border">
+                        {{ candidate.last_name }}
+                    </div>
+                    <div class="col border">
+                        {{ candidate.zip_code }}
+                    </div>
+                    <div class="col border">
+                        {{ candidate.public_id }}
+                    </div>
+                </div>
+            {% endfor %}
+            <nav aria-label="...">
+                <ul class="pager">
+                    <li class="previous{% if not prev_url %} disabled{% endif %}">
+                        <a href="{{ prev_url or '#' }}">
+                            <span aria-hidden="true">&larr;</span> Newer Candidates
+                        </a>
+                    </li>
+                    <li class="next{% if not next_url %} disabled{% endif %}">
+                        <a href="{{ next_url or '#' }}">
+                            Older Candidates <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endblock %}

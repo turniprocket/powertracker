@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    {% if user.in_group(group) %}
+        <div class="row">
+            <div class="col-md-4">
+                <a href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a>
+            </div>    
+        </div>
+        <br>
+    {% endif %}
+    <h2>{{ 'Change password' }}</h2>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(change_password_form) }}
+        </div>
+    </div>
+    <br>
+    <h2>{{ 'Change Email' }}</h2>
+    <div class="row">
+        <p class="col-md-4">Current email address: {{ user.email }}</p>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(change_email_form) }}
+        </div>
+    </div>
+{% endblock %}

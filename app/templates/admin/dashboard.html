@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<h1>Admin Dashboard</h1>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <h3>User management</h3>
+            <div class="row">
+                <div class="col-auto">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseAddUser" role="button" aria-expanded="false" aria-controls="collapseAddUser">
+                            Add new user
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseAddUser">
+                        <div class="card card-body">
+                            {{ wtf.quick_form(add_user_form, button_map={'add_user_submit': 'primary'}) }}
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseDeleteUser" role="button" aria-expanded="false" aria-controls="collapseDeleteUser">
+                            Delete a user
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseDeleteUser">
+                        <div class="card card-body">
+                            {{ wtf.quick_form(delete_user_form, button_map={'delete_user_submit': 'primary'}) }}
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseAddGroup" role="button" aria-expanded="false" aria-controls="collapseAddGroup">
+                            Add a group
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseAddGroup">
+                        <div class="card card-body">
+                            {{ wtf.quick_form(add_group_form, button_map={'add_group_submit': 'primary'}) }}
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseDeleteGroup" role="button" aria-expanded="false" aria-controls="collapseDeleteGroup">
+                            Delete a group
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseDeleteGroup">
+                        <div class="card card-body">
+                            {{ wtf.quick_form(delete_group_form, button_map={'delete_group_submit': 'primary'}) }}
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseAddToGroup" role="button" aria-expanded="false" aria-controls="collapseAddToGroup">
+                            Add to Group
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseAddToGroup">
+                        <div class="card card-body">
+                            {{ wtf.quick_form(add_to_group_form, button_map={'add_to_group_submit': 'primary'}) }}
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-auto">
+                    <p>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseRemoveFromGroup" role="button" aria-expanded="false" aria-controls="collapseRemoveFromGroup">
+                            Remove from Group
+                        </a>
+                    </p>
+                    <div class="collapse" id="collapseRemoveFromGroup">
+                        <div class="card card-body">
+                            {{ wtf.quick_form(remove_from_group_form, button_map={'remove_from_group_submit': 'primary'}) }}
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            #todo quick info
+            <p>
+                -Add admin reset password function
+            </p>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <h3>User list</h3>
+                <div class="row bg-secondary text-white">
+                    <div class="col border">
+                        <p>Username</p>
+                    </div>
+                    <div class="col border">
+                        <p>Email</p>
+                    </div>
+                    <div class="col border">
+                        <p>Last Logon</p>
+                    </div>
+                </div>
+            {% for user in user_list %}
+                <div class="row">
+                    <div class="col border">
+                        {{ user.username }}
+                    </div>
+                    <div class="col border">
+                        {{ user.email }}
+                    </div>
+                    <div class="col border">
+                        {{ user.last_login}}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+{% endblock %}
