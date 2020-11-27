@@ -3,37 +3,28 @@
 {% block app_content %}
     <div class="row">
         <div class="col-auto">
-            <h1>All Contributors</h1>
+            <h1>All Treasurers</h1>
         </div>
         {% if current_user.is_authenticated %}
             <div class="col-auto">
-                <a class="btn btn-primary" href="{{ url_for('texas.new', type='contributor') }}">Add Contributor</a>
+                <a class="btn btn-primary" href="{{ url_for('texas.new', type='treasurer') }}">Add Treasurer</a>
             </div>
         {% endif %}
     </div>
     <br>
-    {% for contributor in contributors_list %}
-        <a href="{{ url_for('texas.contributor', id=contributor.public_id) }}" class="card my-1">
+    {% for treasurer in treasurers_list %}
+        <a href="{{ url_for('texas.treasurer', id=treasurer.public_id) }}" class="card my-1">
             <div class="card-body">
-                <h5 class="card-title">{{ contributor.name }}</h5>
+                <h5 class="card-title">{{ treasurer.name }}</h5>
                 <div class="row">
                     <div class="col">
-                        Contributor Type: {{ contributor.contributor_type }}
+                        City: {{ treasurer.city }}
                     </div>
                     <div class="col">
-                        Political Party: {{ contributor.get_party().name }}
+                        State: {{ treasurer.state }}
                     </div>
                     <div class="col">
-                        Employer/Company: {{ contributor.employer }}
-                    </div>
-                    <div class="col">
-                        Industry: {{ contributor.industry }}
-                    </div>
-                    <div class="col">
-                        City: {{ contributor.city }}
-                    </div>
-                    <div class="col">
-                        State: {{ contributor.state }}
+                        Employer/Company: {{ treasurer.employer }}
                     </div>
                 </div>
             </div>

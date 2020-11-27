@@ -59,10 +59,10 @@ class ContributorForm(BaseProfileForm):
     submit = SubmitField('Add Contributor')
 
 class PartyForm(FlaskForm):
-    party_name = StringField('Party Name', validators=[DataRequired(), Length(max=64)])
+    name = StringField('Party Name', validators=[DataRequired(), Length(max=64)])
     street_address = StringField('Street Address', validators=[Length(max=64)])
     city = StringField('City', validators=[DataRequired(), Length(max=32)])
-    state = SelectField('State', choices=statelist, validate_choice=True)
+    state = SelectField('State', choices=statelist, validate_choice=True, validators=[DataRequired()])
     zip_code = StringField('Zip Code', validators=[DataRequired(), Length(max=10)])
     phone_number = StringField('Phone Number', validators=[Length(max=12)])
     point_of_contact = StringField('Point of Contact', validators=[Length(max=32)])
@@ -71,14 +71,14 @@ class PartyForm(FlaskForm):
     submit = SubmitField('Add Party')
 
 class GovernmentForm(FlaskForm):
-    government_name = StringField('Government Title', validators=[DataRequired(), Length(max=64)])
+    name = StringField('Government Name', validators=[DataRequired(), Length(max=64)])
     government_type = SelectField('Government Type', choices=governmentlist, validate_choice=True)
     seat = StringField('Seat of Government', validators=[DataRequired(), Length(max=32)])
     info = TextAreaField('Info', validators=[Length(max=256)])
     submit = SubmitField('Add Government')
 
 class OfficeForm(FlaskForm):
-    office_name = StringField('Office Title', validators=[DataRequired(), Length(max=64)])
+    name = StringField('Office Name', validators=[DataRequired(), Length(max=64)])
     government = StringField('Government', validators=[DataRequired()])
     government_hidden = HiddenField(validators=[DataRequired()])
     held_by = StringField('Current Office Holder', validators=[DataRequired()])
@@ -87,7 +87,7 @@ class OfficeForm(FlaskForm):
     submit = SubmitField('Add Office')
 
 class ContributionSourceForm(FlaskForm):
-    title = StringField('Source Title', validators=[DataRequired(), Length(max=64)])
+    name = StringField('Source Title', validators=[DataRequired(), Length(max=64)])
     url = StringField('URL', validators=[Length(max=256)])
     info = TextAreaField('Info', validators=[Length(max=256)])
     submit = SubmitField('Add Contribution Source')
@@ -97,7 +97,7 @@ class TreasurerForm(BaseProfileForm):
 
 class SearchForm(FlaskForm):
     q = StringField('Search', validators=[DataRequired()])
-    index = SelectField('', choices=[('all', 'All'), ('contributions', 'Contributions'), ('candidates', 'Candidates'), ('contributors', 'Contributors')])
+    index = SelectField('', choices=[('all', 'All'), ('contribution', 'Contributions'), ('candidate', 'Candidates'), ('contributor', 'Contributors')])
     submit = SubmitField('Search')
     
     def __init__(self, *args, **kwargs):

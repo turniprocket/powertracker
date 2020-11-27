@@ -1,17 +1,8 @@
-.candidateList {
+.autocompleteList {
     position: absolute;
     display: inline-block;
 }
-.candidateListItems {
-    position: relative;
-    z-index: 99;
-    background-color: red;
-}
-.contributorList {
-    position: absolute;
-    display: inline-block;
-}
-.contributorListItems {
+.autocompleteListItems {
     position: relative;
     z-index: 99;
     background-color: red;

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block state_navigation %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{{ url_for('texas.index') }}">Texas Home<span class="sr-only">(current)</span></a>
+    </li>
+{% endblock %}
+
+{% block sidebar_content %}
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.contributions') }}">Contributions<span class="sr-only">(current)</span></a>
+    </li>
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.candidates') }}">Candidates<span class="sr-only">(current)</span></a>
+    </li>
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.contributors') }}">Contributors<span class="sr-only">(current)</span></a>
+    </li>
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.parties') }}">Parties<span class="sr-only">(current)</span></a>
+    </li>
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.governments') }}">Governments<span class="sr-only">(current)</span></a>
+    </li>
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.offices') }}">Offices<span class="sr-only">(current)</span></a>
+    </li>
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.sources') }}">Sources<span class="sr-only">(current)</span></a>
+    </li>
+    <li>
+        <a class="nav-link active" href="{{ url_for('texas.treasurers') }}">Treasurers<span class="sr-only">(current)</span></a>
+    </li>
+{% endblock %}

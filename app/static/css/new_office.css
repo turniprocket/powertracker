@@ -1,0 +1,15 @@
+.autocompleteList {
+    position: absolute;
+    display: inline-block;
+}
+.autocompleteListItems {
+    position: relative;
+    z-index: 99;
+    background-color: red;
+}
+label[for='government_hidden'] {
+    display: none;
+}
+label[for='held_by_hidden'] {
+    display: none;
+}

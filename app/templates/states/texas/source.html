@@ -1,0 +1,16 @@
+{% extends "states/texas/base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <h5>Source Title: {{ source.name }}</h5>
+    </div>
+    <div class="row">
+        Information: {{ source.info }}
+    </div>
+    <div class="row">
+        Date Added: {{ source.date_added }}
+    </div>
+    <div class="row">
+        Link to source: <a href="{{ source.url }}">{{ source.url }}</a>
+    </div>
+{% endblock %}

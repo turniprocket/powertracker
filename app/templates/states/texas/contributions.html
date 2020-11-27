@@ -1,69 +1,50 @@
-{% extends "base.html" %}
+{% extends "states/texas/base.html" %}
 
 {% block app_content %}
     <div class="row">
-        <h1>All Contributions</h1>
+        <div class="col-auto">
+            <h1>All Contributions</h1>
+        </div>
+        {% if current_user.is_authenticated %}
+            <div class="col-auto">
+                <a class="btn btn-primary" href="{{ url_for('texas.new', type='contribution') }}">Add Contribution</a>
+            </div>
+        {% endif %}
     </div>
     <br>
-    <div class="row">
-        <div class="col">
-            <h3>Latest Contributions</h3>
-                <div class="row bg-secondary text-white">
-                    <div class="col border">
-                        <p>Contribution Date</p>
-                    </div>
-                    <div class="col border">
-                        <p>Amount</p>
-                    </div>
-                    <div class="col border">
-                        <p>Contributor</p>
-                    </div>
-                    <div class="col border">
-                        <p>Candidate</p>
-                    </div>
-                    <div class="col border">
-                        <p>Election Cycle</p>
-                    </div>
-                    <div class="col border">
-                        <p>Public ID</p>
-                    </div>
-                </div>
-            {% for contribution in contributions_list %}
+    {% for contribution in contributions_list %}
+        <a href="{{ url_for('texas.contribution', id=contribution.public_id) }}" class="card my-1">
+            <div class="card-body">
+                <h5 class="card-title">{{ contribution.contribution_date }}</h5>
                 <div class="row">
-                    <div class="col border">
-                        {{ contribution.contribution_date }}
+                    <div class="col">
+                        Amount: {{ contribution.amount }}
                     </div>
-                    <div class="col border">
-                        {{ contribution.amount }}
+                    <div class="col">
+                        Candidate: {{ contribution.get_candidate().name }}
                     </div>
-                    <div class="col border">
-                        {{ contribution.get_contributor().first_name }} {{ contribution.get_contributor().last_name }}
+                    <div class="col">
+                        Contributor: {{ contribution.get_contributor().name }}
                     </div>
-                    <div class="col border">
-                        {{ contribution.get_candidate().first_name }} {{ contribution.get_candidate().last_name }}
-                    </div>
-                    <div class="col border">
-                        {{ contribution.election_cycle }}
-                    </div>
-                    <div class="col border">
-                        {{ contribution.public_id }}
+                    <div class="col">
+                        Election Cycle: {{ contribution.election_cycle }}
                     </div>
                 </div>
-            {% endfor %}
-            <nav aria-label="...">
-                <ul class="pager">
-                    <li class="previous{% if not prev_url %} disabled{% endif %}">
-                        <a href="{{ prev_url or '#' }}">
-                            <span aria-hidden="true">&larr;</span> Newer Contributions
-                        </a>
-                    </li>
-                    <li class="next{% if not next_url %} disabled{% endif %}">
-                        <a href="{{ next_url or '#' }}">
-                            Older Contributions <span aria-hidden="true">&rarr;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
+            </div>
+        </a>
+    {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> Newer Contributions
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    Older Contributions <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 {% endblock %}

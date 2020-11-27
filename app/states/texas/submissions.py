@@ -33,26 +33,33 @@ def candidate_submission():
     form = CandidateForm()
 
     if form.submit.data and form.validate_on_submit:
-        new_candidate = Candidate(first_name=form.first_name.data, middle_name=form.middle_name.data, last_name=form.last_name.data, suffix=form.suffix.data, street_address=form.street_address.data,
+        new_candidate = Candidate(first_name=form.first_name.data, middle_name=form.middle_name.data, last_name=form.last_name.data, name=(form.first_name.data + ' ' + form.middle_name.data + ' ' + form.last_name.data), suffix=form.suffix.data, street_address=form.street_address.data,
                                     city=form.city.data, state=form.state.data, zip_code=form.zip_code.data, phone_number=form.phone_number.data, occupation=form.occupation.data, employer=form.employer.data,
                                     industry=form.industry.data, info=form.info.data, active=form.active.data, registration_date=form.registration_date.data, date_added=datetime.utcnow())
         random.seed(datetime.utcnow())
         new_candidate.public_id = ''.join(random.choice(string.ascii_letters) for i in range(10))
         db.session.add(new_candidate)
         db.session.commit()
+        
+        candidate = Candidate.query.filter_by(public_id=new_candidate.public_id).first()
 
-        #candidate = Candidate.query.filter_by(public_id=new_candidate.public_id).first()
-        #party = Party.query.filter_by(public_id=form.party_hidden.data).first()
-        #office_sought = Office.query.filter_by(public_id=form.office_sought_hidden.data).first()
-        #office_held = Office.query.filter_by(public_id=form.office_held_hidden.data).first()
-        #treasurer = Treasurer.query.filter_by(public_id=form.treasurer_hidden.data).first()
+        if form.party_hidden.data:
+            party = Party.query.filter_by(public_id=form.party_hidden.data).first()
+            party.add_candidate_member(candidate)
 
-        #party.add_candidate_member(candidate)
-        #candidate.set_office_held(office_held)
-        #candidate.set_office_sought(office_sought)
-        #candidate.set_treasurer(treasurer)
-        #db.session.commit()
+        if form.office_sought_hidden.data:
+            office_sought = Office.query.filter_by(public_id=form.office_sought_hidden.data).first()
+            candidate.set_office_sought(office_sought)
 
+        if form.office_held_hidden.data:
+            office_held = Office.query.filter_by(public_id=form.office_held_hidden.data).first()
+            candidate.set_office_held(office_held)
+
+        if form.treasurer_hidden.data:
+            treasurer = Treasurer.query.filter_by(public_id=form.treasurer_hidden.data).first()
+            candidate.set_treasurer(treasurer)
+
+        db.session.commit()
         flash('Candidate added')
         return redirect(url_for('texas.new'))
 
@@ -62,7 +69,7 @@ def contributor_submission():
     form = ContributorForm()
 
     if form.submit.data and form.validate_on_submit:
-        new_contributor = Contributor(first_name=form.first_name.data, middle_name=form.middle_name.data, last_name=form.last_name.data, suffix=form.suffix.data, street_address=form.street_address.data,
+        new_contributor = Contributor(first_name=form.first_name.data, middle_name=form.middle_name.data, last_name=form.last_name.data, name=(form.first_name.data + ' ' + form.middle_name.data + ' ' + form.last_name.data), suffix=form.suffix.data, street_address=form.street_address.data,
                                     city=form.city.data, state=form.state.data, zip_code=form.zip_code.data, phone_number=form.phone_number.data, occupation=form.occupation.data, employer=form.employer.data,
                                     industry=form.industry.data, info=form.info.data, contributor_type=form.contributor_type.data, pac_id=form.pac_id.data, date_added=datetime.utcnow())
         random.seed(datetime.utcnow())
@@ -70,11 +77,11 @@ def contributor_submission():
         db.session.add(new_contributor)
         db.session.commit()
 
-        #contributor = Contributor.query.filter_by(public_id=new_contributor.public_id.data).first()
-        #party = Party.query.filter_by(public_id=form.party_hidden.data).first()
-
-        #party.add_contributor_member(contributor)
-        #db.session.commit()
+        if form.party_hidden.data:
+            contributor = Contributor.query.filter_by(public_id=new_contributor.public_id).first()
+            party = Party.query.filter_by(public_id=form.party_hidden.data).first()
+            party.add_contributor_member(contributor)
+            db.session.commit()
 
         flash('Contributor added')
         return redirect(url_for('texas.new'))
@@ -85,7 +92,7 @@ def party_submission():
     form = PartyForm()
 
     if form.submit.data and form.validate_on_submit:
-        new_party = Party(party_name=form.party_name.data, street_address=form.street_address.data, city=form.city.data, zip_code=form.zip_code.data, phone_number=form.phone_number.data, point_of_contact=form.point_of_contact.data,
+        new_party = Party(name=form.name.data, street_address=form.street_address.data, city=form.city.data, state=form.state.data, zip_code=form.zip_code.data, phone_number=form.phone_number.data, point_of_contact=form.point_of_contact.data,
                         committee_id=form.committee_id.data, info=form.info.data, date_added=datetime.utcnow())
         random.seed(datetime.utcnow())
         new_party.public_id = ''.join(random.choice(string.ascii_letters) for i in range(10))
@@ -101,7 +108,7 @@ def government_submission():
     form = GovernmentForm()
 
     if form.submit.data and form.validate_on_submit:
-        new_government = Government(government_name=form.government_name.data, government_type=form.government_type.data, seat=form.seat.data, info=form.info.data, date_added=datetime.utcnow())
+        new_government = Government(name=form.name.data, government_type=form.government_type.data, seat=form.seat.data, info=form.info.data, date_added=datetime.utcnow())
         random.seed(datetime.utcnow())
         new_government.public_id = ''.join(random.choice(string.ascii_letters) for it in range(10))
         db.session.add(new_government)
@@ -116,20 +123,24 @@ def office_submission():
     form = OfficeForm()
 
     if form.submit.data and form.validate_on_submit:
-        new_office = Office(office_name=form.office_name.data, info=form.info.data, date_added=datetime.utcnow()) 
+        new_office = Office(name=form.name.data, info=form.info.data, date_added=datetime.utcnow()) 
         random.seed(datetime.utcnow())
         new_office.public_id = ''.join(random.choice(string.ascii_letters) for i in range(10))
         db.session.add(new_office)
         db.session.commit()
 
-        #office = Office.query.filter_by(public_id=new_office.public_id).first()
-        #government = Government.query.filter_by(public_id=form.government_hidden.data).first()
-        #held_by = Candidate.query.filter_by(public_id=form.held_by_hidden.data).first()
+        office = Office.query.filter_by(public_id=new_office.public_id).first()
+        if form.government_hidden.data:
+            government = Government.query.filter_by(public_id=form.government_hidden.data).first()
+            government.add_office(office)
 
-        #government.add_office(office)
-        #held_by.set_office_held(office)
-        #db.session.commit()
+        print(office.id)
+        print(form.held_by_hidden.data)
+        if form.held_by_hidden.data:
+            held_by = Candidate.query.filter_by(public_id=form.held_by_hidden.data).first()
+            held_by.set_office_held(office)
 
+        db.session.commit()
         flash('Office added')
         return redirect(url_for('texas.new'))
 
@@ -139,7 +150,7 @@ def contribution_source_submission():
     form = ContributionSourceForm()
 
     if form.submit.data and form.validate_on_submit:
-        new_contribution_source = ContributionSource(title=form.title.data, url=form.url.data, info=form.info.data, date_added=datetime.utcnow())
+        new_contribution_source = ContributionSource(name=form.name.data, url=form.url.data, info=form.info.data, date_added=datetime.utcnow())
         random.seed(datetime.utcnow())
         new_contribution_source.public_id = ''.join(random.choice(string.ascii_letters) for i in range(10))
         db.session.add(new_contribution_source)
@@ -154,7 +165,7 @@ def treasurer_submission():
     form = TreasurerForm()
 
     if form.submit.data and form.validate_on_submit:
-        new_treasurer = Treasurer(first_name=form.first_name.data, middle_name=form.middle_name.data, last_name=form.last_name.data, suffix=form.suffix.data, street_address=form.street_address.data,
+        new_treasurer = Treasurer(first_name=form.first_name.data, middle_name=form.middle_name.data, last_name=form.last_name.data, name=(form.first_name.data + ' ' + form.middle_name.data + ' ' + form.last_name.data), suffix=form.suffix.data, street_address=form.street_address.data,
                                     city=form.city.data, state=form.state.data, zip_code=form.zip_code.data, phone_number=form.phone_number.data, occupation=form.occupation.data, employer=form.employer.data,
                                     industry=form.industry.data, info=form.info.data, date_added=datetime.utcnow())
 

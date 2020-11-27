@@ -1,0 +1,67 @@
+{% extends "states/texas/base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <h5>Candidate Name: {{ candidate.name }}</h5>
+    </div>
+    <div class="row">
+        {% if candidate.active %}
+            Active: Yes
+        {% else %}
+            Active: No
+        {% endif %}
+    </div>
+    <div class="row">
+        Seeking Office: <a href="{{ url_for('texas.office', id=candidate.get_office_sought().public_id) }}" class="card">{{ candidate.get_office_sought.name }}</a>
+    </div>
+    <div class="row">
+        Current Office: <a href="{{ url_for('texas.office', id=candidate.get_office_held().public_id) }}" class="card">{{ candidate.get_office_held().name }}</a>
+    </div>
+    <div class="row">
+        Political Party: <a href="{{ url_for('texas.party', id=candidate.get_party().public_id) }}" class="card">{{ candidate.get_party().name }}</a>
+    </div>
+    <div class="row">
+        Treasurer: <a href="{{ url_for('texas.treasurer', id=candidate.get_treasurer().public_id) }}" class="card">{{ candidate.get_treasurer().name }}</a>
+    </div>
+    <div class="row">
+        Street Address: {{ candidate.street_address }}
+    </div>
+    <div class="row">
+        City: {{ candidate.city }}
+    </div>
+    <div class="row">
+        State: {{ candidate.state }}
+    </div>
+    <div class="row">
+        Zip Code: {{ candidate.zip_code }}
+    </div>
+    <div class="row">
+        Phone Number: {{ candidate.phone_number }}
+    </div>
+    <div class="row">
+        Occupation/Title: {{ candidate.occupation }}
+    </div>
+    <div class="row">
+        Employer/Company: {{ candidate.employer }}
+    </div>
+    <div class="row">
+        Industry: {{ candidate.industry }}
+    </div>
+    <div class="row">
+        Info: {{ candidate.info }}
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-auto">
+            <h3>Received Contributions</h3>
+            <br>
+            {% for contribution in contributions %}
+                <div class="row">
+                    <a href="{{ url_for('texas.contribution', id=contribution.public_id) }}">
+                        From: {{ contribution.get_contributor().name }} | Amount: ${{ contribution.amount }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

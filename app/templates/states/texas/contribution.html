@@ -1,0 +1,28 @@
+{% extends "/states/texas/base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        Contribution Date: {{ contribution.contribution_date }}
+    </div>
+    <div class="row">
+        Amount: {{ contribution.amount }}
+    </div>
+    <div class="row">
+        Candidate: <a href="{{ url_for('texas.candidate', id=contribution.get_candidate().public_id) }}" class="card">{{ contribution.get_candidate().name }}</a>
+    </div>
+    <div class="row">
+        Contributor: <a href="{{ url_for('texas.contributor', id=contribution.get_contributor().public_id) }}" class="card">{{ contribution.get_contributor().name }}</a>
+    </div>
+    <div class="row">
+        Contribution Type: {{ contribution.contribution_type }}
+    </div>
+    <div class="row">
+        Election Cycle: {{ contribution.election_cycle }}
+    </div>
+    <div class="row">
+        Filing Date: {{ contribution.filing_date }}
+    </div>
+    <div class="row">
+        Information Source: <a href="{{ url_for('texas.source', id=contribution.get_contribution_source().public_id) }}" class="card">{{ contribution.get_contribution_source().name }}</a>
+    </div>
+{% endblock %}

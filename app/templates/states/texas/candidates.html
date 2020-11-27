@@ -1,57 +1,59 @@
-{% extends "base.html" %}
+{% extends "states/texas/base.html" %}
 
 {% block app_content %}
     <div class="row">
-        <h1>All Candidates</h1>
+        <div class="col-auto">
+            <h1>All Candidates</h1>
+        </div>
+        {% if current_user.is_authenticated %}
+            <div class="col-auto">
+                <a class="btn btn-primary" href="{{ url_for('texas.new', type='candidate') }}">Add Candidate</a>
+            </div>
+        {% endif %}
     </div>
     <br>
-    <div class="row">
-        <div class="col">
-            <h3>Latest Candidates</h3>
-                <div class="row bg-secondary text-white">
-                    <div class="col border">
-                        <p>Registration Date</p>
-                    </div>
-                    <div class="col border">
-                        <p>Last Name</p>
-                    </div>
-                    <div class="col border">
-                        <p>Zip Code</p>
-                    </div>
-                    <div class="col border">
-                        <p>Public ID</p>
-                    </div>
-                </div>
-            {% for candidate in candidates_list %}
+    {% for candidate in candidates_list %}
+        <a href="{{ url_for('texas.candidate', id=candidate.public_id) }}" class="card my-1">
+            <div class="card-body">
+                <h5 class="card-title">{{ candidate.name }}</h5>
                 <div class="row">
-                    <div class="col border">
-                        {{ candidate.registration_date }}
+                    <div class="col">
+                        Seeking office: {{ candidate.get_office_sought().name }}
                     </div>
-                    <div class="col border">
-                        {{ candidate.last_name }}
+                    <div class="col">
+                        Current Office: {{ candidate.get_office_held().name }}
                     </div>
-                    <div class="col border">
-                        {{ candidate.zip_code }}
+                    <div class="col">
+                        Political Party: {{ candidate.get_party().name }}
                     </div>
-                    <div class="col border">
-                        {{ candidate.public_id }}
+                    <div class="col">
+                        City: {{ candidate.city }}
+                    </div>
+                    <div class="col">
+                        State: {{ candidate.state }}
+                    </div>
+                    <div class="col">
+                        Employer/Company: {{ candidate.employer }}
+                    </div>
+                    <div class="col">
+                        Registration Date: {{ candidate.registration_date }}
                     </div>
                 </div>
-            {% endfor %}
-            <nav aria-label="...">
-                <ul class="pager">
-                    <li class="previous{% if not prev_url %} disabled{% endif %}">
-                        <a href="{{ prev_url or '#' }}">
-                            <span aria-hidden="true">&larr;</span> Newer Candidates
-                        </a>
-                    </li>
-                    <li class="next{% if not next_url %} disabled{% endif %}">
-                        <a href="{{ next_url or '#' }}">
-                            Older Candidates <span aria-hidden="true">&rarr;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
+            </div>
+        </a>
+    {% endfor %}
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous{% if not prev_url %} disabled{% endif %}">
+                <a href="{{ prev_url or '#' }}">
+                    <span aria-hidden="true">&larr;</span> Newer Contributions
+                </a>
+            </li>
+            <li class="next{% if not next_url %} disabled{% endif %}">
+                <a href="{{ next_url or '#' }}">
+                    Older Contributions <span aria-hidden="true">&rarr;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 {% endblock %}

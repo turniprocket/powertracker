@@ -12,6 +12,7 @@ class BaseProfile(object):
     first_name = db.Column(db.String(32), index=True)
     middle_name = db.Column(db.String(32), index=True)
     last_name = db.Column(db.String(32), index=True)
+    name = db.Column(db.String(128), index=True)
     suffix = db.Column(db.String(8))
     street_address = db.Column(db.String(32), index=True)
     city = db.Column(db.String(32), index=True)
@@ -98,7 +99,7 @@ contribution_sources = db.Table(
 )
 
 government_offices = db.Table(
-    'governments_offices',
+    'government_offices',
     db.Column('government_id', db.Integer, db.ForeignKey('government.id')),
     db.Column('office_id', db.Integer, db.ForeignKey('office.id'))
 )
@@ -176,7 +177,7 @@ class Contribution(SearchableMixin ,db.Model):
             contribution_sources.c.contribution_id == self.id).first()
     
 class Candidate(SearchableMixin, BaseProfile, db.Model):
-    __searchable__ = ['public_id', 'first_name', 'middle_name', 'last_name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
+    __searchable__ = ['public_id', 'first_name', 'middle_name', 'last_name', 'name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
                       'occupation', 'employer', 'industry']
     id = db.Column(db.Integer, primary_key=True)
     active = db.Column(db.Boolean, index=True)
@@ -214,7 +215,7 @@ class Candidate(SearchableMixin, BaseProfile, db.Model):
         backref=db.backref('treasurer', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
-        return '<Candidate: {}>'.format(self.first_name)
+        return '<Candidate: {}>'.format(self.name)
 
     def get_party(self):
         return self.party.filter(
@@ -249,7 +250,7 @@ class Candidate(SearchableMixin, BaseProfile, db.Model):
             contribution_candidate.c.candidate_id == self.id).all()
 
 class Contributor(SearchableMixin, BaseProfile, db.Model):
-    __searchable__ = ['public_id', 'first_name', 'middle_name', 'last_name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
+    __searchable__ = ['public_id', 'first_name', 'middle_name', 'last_name', 'name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
                       'occupation', 'employer', 'industry']
     id = db.Column(db.Integer, primary_key=True)
     contributor_type = db.Column(db.String(1), index=True)
@@ -269,7 +270,7 @@ class Contributor(SearchableMixin, BaseProfile, db.Model):
         backref=db.backref('contribution_contributor', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
-        return '<Contributor: {}>'.format(self.first_name)
+        return '<Contributor: {}>'.format(self.name)
 
     def get_party(self):
         return self.party.filter(contributor_party_membership.c.contributor_id == self.id).first()
@@ -279,11 +280,11 @@ class Contributor(SearchableMixin, BaseProfile, db.Model):
             contribution_contributor.c.contributor_id == self.id).all()
 
 class Party(SearchableMixin, db.Model):
-    __searchable__ = ['public_id', 'party_name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
+    __searchable__ = ['public_id', 'name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
                       'point_of_contact', 'committee_id']
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(8), index=True, unique=True)
-    party_name = db.Column(db.String(64), index=True)
+    name = db.Column(db.String(64), index=True)
     street_address = db.Column(db.String(64), index=True)
     city = db.Column(db.String(32), index=True)
     state = db.Column(db.String(2), index=True)
@@ -307,7 +308,7 @@ class Party(SearchableMixin, db.Model):
         backref=db.backref('contributor_party', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
-        return '<Party: {}>'.format(self.party_name)
+        return '<Party: {}>'.format(self.name)
 
     def add_candidate_member(self, candidate):
         if not self.candidate_in_party(candidate):
@@ -334,22 +335,18 @@ class Party(SearchableMixin, db.Model):
             contributor_party_membership.c.contributor_id == contributor.id).count() > 0
 
     def get_candidates(self):
-        candidate_list = Candidate.query.join(
-            candidate_party_membership, (candidate_party_membership.c.party_id == self.id)).filter(
-                candidate_party_membership.c.party_id == self.id)
-        return candidate_list
+        return self.candidate_members.filter(
+            candidate_party_membership.c.party_id == self.id).all()
 
     def get_contributors(self):
-        contributor_list = Contributor.query.join(
-            contributor_party_membership, (contributor_party_membership.c.party_id == self.id)).filter(
-                contributor_party_membership.c.party_id == self.id)
-        return contributor_list
+        return self.contributor_members.filter(
+            contributor_party_membership.c.party_id == self.id).all()
 
 class Government(SearchableMixin, db.Model):
-    __searchable__ = ['public_id', 'government_name', 'government_type', 'seat']
+    __searchable__ = ['public_id', 'name', 'government_type', 'seat']
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(8), index=True, unique=True)
-    government_name = db.Column(db.String(64), index=True)
+    name = db.Column(db.String(64), index=True)
     government_type = db.Column(db.String(16))
     seat = db.Column(db.String(32), index=True)
     info = db.Column(db.String(256))
@@ -377,11 +374,11 @@ class Government(SearchableMixin, db.Model):
         return self.offices.filter(
             government_offices.c.office_id == office.id).count() > 0
 
-class Office(SearchableMixin, db.Model):
-    __searchable__ = ['public_id', 'office_name']
+class Office(SearchableMixin,   db.Model):
+    __searchable__ = ['public_id', 'name']
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(8), index=True, unique=True)
-    office_name = db.Column(db.String(64), index=True)
+    name = db.Column(db.String(64), index=True)
     info = db.Column(db.String(256))
     date_added = db.Column(db.DateTime, index=True)
 
@@ -416,10 +413,10 @@ class Office(SearchableMixin, db.Model):
             offices_sought.c.office_id == self.id).all()
 
 class ContributionSource(SearchableMixin, db.Model):
-    __searchable__ = ['public_id', 'title']
+    __searchable__ = ['public_id', 'name']
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(8), index=True, unique=True)
-    title = db.Column(db.String(64))
+    name = db.Column(db.String(64))
     url = db.Column(db.String(256))
     info = db.Column(db.String(256))
     date_added = db.Column(db.DateTime, index=True)
@@ -435,7 +432,7 @@ class ContributionSource(SearchableMixin, db.Model):
             contribution_sources.c.contribution_source_id == self.id).all()
 
 class Treasurer(SearchableMixin, BaseProfile, db.Model):
-    __searchable__ = ['public_id', 'first_name', 'middle_name', 'last_name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
+    __searchable__ = ['public_id', 'first_name', 'middle_name', 'last_name', 'name', 'street_address', 'city', 'state', 'zip_code', 'phone_number',
                       'occupation', 'employer', 'industry']
     id = db.Column(db.Integer, primary_key=True)
     date_added = db.Column(db.DateTime, index=True)

@@ -1,0 +1,16 @@
+{% extends "states/texas/base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <h3>Office Name: {{ office.name }}</h3>
+    </div>
+    <div class="row">
+        Goverment: <a href="{{ url_for('texas.government', id=office.get_government().public_id) }}">{{ office.get_government().name }}</a>
+    </div>
+    <div class="row">
+        Current Office Holder: <a href="{{ url_for('texas.candidate', id=office.get_office_holder().public_id) }}">{{ office.get_office_holder().name }}</a>
+    </div>
+    <div class="row">
+        Info: {{ office.info }}
+    </div>
+{% endblock %}

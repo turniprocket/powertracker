@@ -1,0 +1,49 @@
+{% extends "states/texas/base.html" %}
+
+{% block app_content %}
+    <div class="row">
+        <h5>Treasurer Name: {{ treasurer.name }}</h5>
+    </div>
+    <div class="row">
+        Street Address: {{ treasurer.street_address }}
+    </div>
+    <div class="row">
+        City: {{ treasurer.city }}
+    </div>
+    <div class="row">
+        State: {{ treasurer.state }}
+    </div>
+    <div class="row">
+        Zip Code: {{ treasurer.zip_code }}
+    </div>
+    <div class="row">
+        Phone Number: {{ treasurer.phone_number }}
+    </div>
+    <div class="row">
+        Occupation/Title: {{ treasurer.occupation }}
+    </div>
+    <div class="row">
+        Employer/Company: {{ treasurer.employer }}
+    </div>
+    <div class="row">
+        Industry: {{ treasurer.industry }}
+    </div>
+    <div class="row">
+        Info: {{ treasurer.info }}
+    </div>
+    <div class="row">
+        Date Added {{ treasurer.date_added }}
+    </div>
+    <br>
+    <div class="row">
+        <h3>Candidates</h3>
+        <br>
+        {% for candidate in candidates %}
+            <div class="row">
+                <a href="{{ url_for('texas.candidate', id=candidate.public_id) }}">
+                    {{ candidate.name }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

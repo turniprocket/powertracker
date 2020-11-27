@@ -1,0 +1,21 @@
+.autocompleteList {
+    position: absolute;
+    display: inline-block;
+}
+.autocompleteListItems {
+    position: relative;
+    z-index: 99;
+    background-color: red;
+}
+label[for='party_hidden'] {
+    display: none;
+}
+label[for='office_sought_hidden'] {
+    display: none;
+}
+label[for='office_held_hidden'] {
+    display: none;
+}
+label[for='treasurer_hidden'] {
+    display: none;
+}
